@@ -1,4 +1,13 @@
-var Presenter = {
+var self;
+var Presenter = function(config) {
+	this.config = config;
+	self = this;
+	return self;
+
+};
+
+Presenter.prototype = {
+	constructor: Presenter,
 	makeDocument: function(resource) {
 		if (!Presenter.parser) {
 			Presenter.parser = new DOMParser();
@@ -30,19 +39,6 @@ var Presenter = {
 			player.playlist.push(mediaItem);
 			player.present();
 		}
-	},
-	loadAssetDetail: function(event) {
-		var ele = event.target;
-		var assetID = ele.getAttribute("assetID");	
-
-		if (assetID) {
-			resourceLoader.loadResource(baseURL + `templates/assetDetail.xml.js`, function(resource) {
-
-				var assetDoc = Presenter.makeDocument(resource);
-				assetDoc.addEventListener("select", Presenter.load.bind(Presenter));
-				assetDoc.addEventListener("select", loadAssetDetail.bind(Presenter));
-				Presenter.pushDocument(assetDoc);
-			});
-		}		
 	}
-}
+
+};
