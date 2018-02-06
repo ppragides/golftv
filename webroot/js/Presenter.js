@@ -7,7 +7,18 @@ var Presenter = function(config) {
 };
 
 Presenter.prototype = {
+	/**
+	 * 
+	 * 
+	 * 
+	 */
 	constructor: Presenter,
+
+	/**
+	 * 
+	 * Create a new document from the template file we'rel oading
+	 * 
+	 */
 	makeDocument: function(resource) {
 		if (!Presenter.parser) {
 			Presenter.parser = new DOMParser();
@@ -16,14 +27,29 @@ Presenter.prototype = {
 		return doc;
 	},
 
+	/**
+	 * 
+	 * Present the modal dialog 
+	 * 
+	 */
 	modalDialogPresenter: function(xml) {
 		navigationDocument.presentModal(xml);
 	},
 
+	/**
+	 * 
+	 * Push the XML file we've loaded into navigationDocument
+	 * 
+	 */
 	pushDocument: function(xml) {
 		navigationDocument.pushDocument(xml);
 	},
 
+	/**
+	 * 
+	 * Function to bind event handlers 
+	 * 
+	 */
 	load: function(event) {
   		var self = this,
       	ele = event.target,
