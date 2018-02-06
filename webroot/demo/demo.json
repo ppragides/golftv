@@ -1,0 +1,25 @@
+{
+    "assets": 
+        [
+            {
+                "title": "Swing Analysis 1",
+                "description": "A swing analysis",
+                "category": 1,
+                "video": "Chris_Swing.m4v",
+                "poster": "chris_swing.jpg",
+                "rating": 0,
+                "golfer": "Chris S.",
+                "expiry": ""
+            },        
+            {
+                "title": "Swing Analysis 2",
+                "description": "Another swing analysis",
+                "category": 1,
+                "video": "Paolo_Swing.m4v",
+                "poster": "paolo_swing.jpg",
+                "rating": 0,
+                "golfer": "Paolo Pragides",
+                "expiry": ""
+            }
+        ]
+}

@@ -54,7 +54,6 @@ Presenter.prototype = {
   		var self = this,
       	ele = event.target,
       	videoURL = ele.getAttribute("videoURL");
-
 		var xmlToLoad = ele.getAttribute("jsTemplate");
 		if(videoURL) {
 			var player = new Player();
@@ -65,6 +64,17 @@ Presenter.prototype = {
 			player.playlist.push(mediaItem);
 			player.present();
 		}
+
+		if (xmlToLoad) {
+			resourceLoader.loadResource(baseURL + `templates/` + jsXML, function(resource) {
+				var doc = this.makeDocument(resource);
+				var menuItemDocument = ele.parentNode.getFeature("MenuBarDocument");		
+				menuItemDocument.setDocument(doc, ele)	
+				doc.addEventListener("select", loadAssetDetail.bind(this));
+				doc.addEventListener("select", this.load.bind(this));
+				this.pushDocument(doc);
+			})			
+		}		
 	}
 
 };
