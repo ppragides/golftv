@@ -7,22 +7,24 @@ App.onLaunch = function(options) {
 	var javascriptFiles = [
 	 `${options.BASEURL}js/ResourceLoader.js`,
      `${options.BASEURL}js/GolfTV.js`,
-	 `${options.BASEURL}js/Presenter.js`
+	 `${options.BASEURL}js/Presenter.js`,
+	 `${options.BASEURL}js/config.js`
 	];
 
 	baseURL = options.BASEURL;
     // Make sure we're able to load all of the required resources before proceeding
 	evaluateScripts(javascriptFiles, function(success) {
 		if(success) {
-            GolfTV = new GolfTV();            
-            Presenter = new Presenter();
-			resourceLoader = new ResourceLoader(options.BASEURL);
+            GolfTV = new GolfTV(GolfConfig.golftv);            
+            Presenter = new Presenter(GolfConfig.presenter);
+			resourceLoader = new ResourceLoader(GolfConfig.resourceLoader);
 			resourceLoader.loadResource(`${options.BASEURL}templates/menubar.xml.js`, function(resource) {
 				var doc = Presenter.makeDocument(resource);
-				// doc.addEventListener("select", loadMenu.bind(Presenter));
+				doc.addEventListener("select", loadMenu.bind(Presenter));
 				Presenter.pushDocument(doc);
 			})
 		} else {
+			// Display an error message if any of the scripts couldn't be loaded.
 			var errorDoc = createAlert("Evaluate Scripts Error", "Error attempting to evaluate external JavaScript files.");
 			navigationDocument.presentModal(errorDoc);
 		}
