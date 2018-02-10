@@ -1,9 +1,10 @@
 var GolfConfig = {
     golftv: {
+        harperDBToken: "SERCX0FETUlOOnBvbnRpMTAx",
         harperDBProtocol: "http",
         harperDBHost: "localhost",
         harperDBPath: "/",
-        harperDBPort: 80
+        harperDBPort: 9925
     },
     resourceLoader: {
 

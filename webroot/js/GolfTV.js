@@ -11,12 +11,29 @@ GolfTV.prototype = {
 
     getNewReleasesXML: function(options) {
         // Build out URL to send request to retrieve 5 newest entries
-        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort + this.config.harperDBPath;
+        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort;
 
         // Instantiate new XMLHttpRequest object for sending out our request
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", requestURL, false);
-        xmlhttp.send(null);
+
+        var requestData = {
+            "operation": "search_by_value",
+            "schema": "golftv_dev",
+            "table": "videos",
+            "hash_attribute": "id",
+            "search_attribute": "name",
+            "search_value": "*",
+            "get_attributes": "*"
+        };
+
+        // Initialize a request to our built URL, making sure to set false as the 3rd parameter to make the request synchronous        
+        xmlhttp.open("POST", requestURL, false);
+
+        // Set headers for our request
+        xmlhttp.setRequestHeader('Authorization', 'Basic ' + this.getBasicAuthToken());
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+
+        xmlhttp.send(requestData);
 
         // Retrieve response text and translate to JSON
         xmlResponse = xmlhttp.responseText;
@@ -25,13 +42,13 @@ GolfTV.prototype = {
         var newReleasesXML = "";
         var asset;
         // Iterate through results and build out XML to be returned.
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < jsonObject.length; i++) {
 
-            asset = jsonObject.assets[i];
+            asset = jsonObject[i];
             
             newReleasesXML += "                <lockup assetID='" + asset.id + "'>\n";
-            newReleasesXML += "                  <img src='https://vod.shaw.ca/v2/art/" + asset.id + "/" + asset.images.poster + "/width:134' width='134' height='197' style='border-radius: small;'/> \n";
-            newReleasesXML += "                  <title style='font-size: 24px;'>" + asset.name + "</title>\n";
+            newReleasesXML += "                  <img src='" + asset.poster_url + "' width='134' height='197' style='border-radius: small;'/> \n";
+            newReleasesXML += "                  <title style='font-size: 24px;'>" + asset.title + "</title>\n";
             newReleasesXML += "                </lockup>\n";
         }
 
@@ -40,23 +57,39 @@ GolfTV.prototype = {
 
     getFeaturedBannersXML: function() {
         // Build out URL to send request to retrieve 5 newest entries
-        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort + this.config.harperDBPath;
+        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort;
 
         // Instantiate new XMLHttpRequest object for sending out our request
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", requestURL, false);
-        xmlhttp.send(null);
+
+        var requestData = {
+            "operation": "search_by_value",
+            "schema": "golftv_dev",
+            "table": "banners",
+            "hash_attribute": "id",
+            "search_attribute": "name",
+            "search_value": "*",
+            "get_attributes": "*"
+        };
+
+        xmlhttp.open("POST", requestURL, false);
+
+        // Set headers for our request
+        xmlhttp.setRequestHeader('Authorization', 'Basic ' + this.getBasicAuthToken());
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+                
+        xmlhttp.send(requestData);
 
         // Retrieve response text and translate to JSON
         xmlResponse = xmlhttp.responseText;
         var jsonObject = JSON.parse(xmlResponse);    
 
         var asset;
-        for (var i = 0; i < jsonObject.heroes.length; i++) {
-            asset = jsonObject.heroes[i];
+        for (var i = 0; i < jsonObject.length; i++) {
+            asset = jsonObject[i];
 
-            featuredBannersXML += '<lockup assetID="">\n';
-            featuredBannersXML += "<img src='https://vod.shaw.ca/" + asset.images.web.large + "' width='1888' height='590' style='border-radius: medium;' />";
+            featuredBannersXML += '<lockup assetID="' + asset.id + '">\n';
+            featuredBannersXML += "<img src='https://vod.shaw.ca/" + asset.poster_url + "' width='1888' height='590' style='border-radius: medium;' />";
             featuredBannersXML += '</lockup>\n';
         }    
     },
@@ -78,10 +111,10 @@ GolfTV.prototype = {
     },
     /**
      * 
-     * Function that retrieves the four newest entries from HarperDB
+     * Function that returns the base64 encoded user:pass token
      * 
      */
-    getNewReleases: function() {
-
+    getBasicAuthToken: function() {
+        return this.config.harperDBToken;
     }
 };
