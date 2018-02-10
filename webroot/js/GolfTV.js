@@ -73,7 +73,7 @@ GolfTV.prototype = {
      *   - category
      * 
      */
-    loadAsset: function(assetID) {
+    loadAssetDetail: function(assetID) {
 
     },
     /**

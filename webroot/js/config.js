@@ -9,6 +9,6 @@ var GolfConfig = {
 
     },
     presenter: {
-
+        baseURL: "http://local.golf.tv:30080/"
     }
 };

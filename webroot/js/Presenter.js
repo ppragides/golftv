@@ -66,13 +66,13 @@ Presenter.prototype = {
 		}
 
 		if (xmlToLoad) {
-			resourceLoader.loadResource(baseURL + `templates/` + jsXML, function(resource) {
-				var doc = this.makeDocument(resource);
-				var menuItemDocument = ele.parentNode.getFeature("MenuBarDocument");		
-				menuItemDocument.setDocument(doc, ele)	
-				doc.addEventListener("select", loadAssetDetail.bind(this));
-				doc.addEventListener("select", this.load.bind(this));
-				this.pushDocument(doc);
+			resourceLoader.loadResource(this.config.baseURL + `templates/` + xmlToLoad, function(resource) {
+				var doc = Presenter.makeDocument(resource);
+				// var menuItemDocument = ele.parentNode.getFeature("MenuBarDocument");		
+				// menuItemDocument.setDocument(doc, ele)	
+				// doc.addEventListener("select", loadAssetDetail.bind(this));
+				doc.addEventListener("select", Presenter.load.bind(Presenter));
+				Presenter.pushDocument(doc);
 			})			
 		}		
 	}
