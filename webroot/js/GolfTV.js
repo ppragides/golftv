@@ -89,7 +89,7 @@ GolfTV.prototype = {
         for (var i = 0; i < jsonObject.length; i++) {
             asset = jsonObject[i];
 
-            featuredBannersXML += '<lockup assetID="' + asset.id + '">\n';
+            featuredBannersXML += '<lockup assetID="' + asset.video_id + '">\n';
             featuredBannersXML += "<img src='" + asset.poster_url + "' width='1888' height='590' style='border-radius: medium;' />";
             featuredBannersXML += '</lockup>\n';
         }    
@@ -108,9 +108,13 @@ GolfTV.prototype = {
      *   - category
      * 
      */
-    loadAssetDetail: function(assetID) {
+    loadAssetDetail: function(event) {
+
+        // Grab event variables
+        var ele = event.target,
+      	assetID = ele.getAttribute("assetID");        
         // Build out URL to send request to featured banners
-        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort;
+        var requestURL = GolfTV.config.harperDBProtocol + "://" + GolfTV.config.harperDBHost + ":" + GolfTV.config.harperDBPort;
 
         // Instantiate new XMLHttpRequest object for sending out our request
         var xmlhttp = new XMLHttpRequest();
@@ -118,17 +122,17 @@ GolfTV.prototype = {
         var requestData = {
             "operation": "search_by_value",
             "schema": "golftv_dev",
-            "table": "banners",
+            "table": "videos",
             "hash_attribute": "id",
             "search_attribute": "id",
             "search_value": assetID,
             "get_attributes": "*"
         };
-        
+
         xmlhttp.open("POST", requestURL, false);
 
         // Set headers for our request
-        xmlhttp.setRequestHeader('Authorization', 'Basic ' + this.getBasicAuthToken());
+        xmlhttp.setRequestHeader('Authorization', 'Basic ' + GolfTV.getBasicAuthToken());
         xmlhttp.setRequestHeader('Content-Type', 'application/json');
                 
         xmlhttp.send(JSON.stringify(requestData));
@@ -136,9 +140,63 @@ GolfTV.prototype = {
         // Retrieve response text and translate to JSON
         xmlResponse = xmlhttp.responseText;
         var jsonObject = JSON.parse(xmlResponse);
+        var assetObject = jsonObject[0];
 
-        // First result should be our only result.
-        return jsonObject;
+        var returnXML = `<?xml version="1.0" encoding="UTF-8" ?>
+        <document>
+            <productTemplate> 
+            <background>
+                <img src="http://local.golf.tv:30080/demo/images/golf_background.jpg" />
+            </background> 
+            <banner> 
+                <infoList>
+                    <info>
+                        <header>
+                            <title>Director</title>
+                        </header>
+                        <text>` + assetObject.director + `</text>
+                    </info>
+                    <info>
+                        <header>
+                            <title>Cast</title>
+                        </header>
+                        <text>` + assetObject.golfer + `</text>
+                    </info>            
+                </infoList>
+                <stack>
+                    <title>` + assetObject.title + `</title>
+                    <description>` + assetObject.description + `</description>
+                    <row>
+                    <buttonLockup videoURL="` + assetObject.video_url + `">
+                        <badge src="resource://button-preview" />
+                        <title>Watch</title>
+                    </buttonLockup>
+                    </row>
+                </stack>
+                <heroImg src="` + assetObject.poster_url + `" />
+            </banner>
+            <shelf>
+                <header>
+                    <title>More like this</title>
+                </header>
+                <section>
+                    <lockup assetID="1">
+                        <img src="https://vod.shaw.ca/v2/art/399077/399077_3550858_1_1.jpg/width:190/" width="190" height="250"/>
+                        <title>Paolo's Golf Swing</title>
+                    </lockup>
+                    <lockup assetID="2">
+                        <img src="https://vod.shaw.ca/v2/art/398829/398829_3547543_1_1.jpg/width:190/" width="190" height="250"/>
+                        <title>Chris' Golf Swing</title>
+                    </lockup>                                             
+                </section>
+            </shelf>
+            </productTemplate>
+        </document>`;        
+
+  		var assetDoc = Presenter.makeDocument(returnXML);
+		assetDoc.addEventListener("select", Presenter.load.bind(Presenter));
+		assetDoc.addEventListener("select", GolfTV.loadAssetDetail.bind(Presenter));
+		Presenter.pushDocument(assetDoc);
     },
     /**
      * 

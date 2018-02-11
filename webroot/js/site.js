@@ -18,10 +18,10 @@ Site.prototype = {
         var requestData = {
             "operation": "search_by_value",
             "schema": "golftv_dev",
-            "table": "banners",
+            "table": "videos",
             "hash_attribute": "id",
             "search_attribute": "id",
-            "search_value": "*",
+            "search_value": "1",
             "get_attributes": "*"
         };
 
@@ -38,14 +38,17 @@ Site.prototype = {
         var jsonObject = JSON.parse(xmlResponse);    
 
         var asset;
-        var featuredBannersXML = "";
+        var videosHTML = "";
         for (var i = 0; i < jsonObject.length; i++) {
             asset = jsonObject[i];
 
-            featuredBannersXML += '<lockup assetID="' + asset.id + '">\n';
-            featuredBannersXML += "<img src='" + asset.poster_url + "' width='1888' height='590' style='border-radius: medium;' />";
-            featuredBannersXML += '</lockup>\n';
+            videosHTML += '<tr>';
+            videosHTML += "<td>" + asset.id + "</td>";
+            videosHTML += "<td>" + asset.title + "</td>";
+            videosHTML += "<td>" + asset.video_url + "</td>";
+            videosHTML += "<td>" + asset.golfer + "</td>";
+            videosHTML += '</tr>';
         }    
-        return featuredBannersXML;        
+        return videosHTML;        
     }
 };

@@ -2,8 +2,11 @@ var Template = function(GolfTV) {
     var homeXML = `<?xml version="1.0" encoding="UTF-8" ?>
   <document>
     <stackTemplate> 
+      <background>
+        <img src="http://local.golf.tv:30080/demo/images/golf_background.jpg" />
+      </background>    
       <banner>
-        <heroImg src="http://local.golf.tv:30080/demo/images/golftv.png" width="360" height="66" />
+        <heroImg src="http://local.golf.tv:30080/demo/images/golftv.png" width="140" height="140" />
       </banner>   
       <collectionList>
         <shelf>
