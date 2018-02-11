@@ -8,6 +8,99 @@ var GolfTV = function(config) {
 
 GolfTV.prototype = {
 	constructor: GolfTV,
+    getSimilarVideos: function(fk_category) {
+        // Build out URL to send request to retrieve new releases
+        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort;
+
+        // Instantiate new XMLHttpRequest object for sending out our request
+        var xmlhttp = new XMLHttpRequest();
+        // Convert the category ID into a string
+        fk_category = fk_category.toString();
+
+        var requestData = {
+            "operation": "search_by_value",
+            "schema": "golftv_dev",
+            "table": "videos",
+            "hash_attribute": "id",
+            "search_attribute": "fk_category",
+            "search_value": fk_category,
+            "get_attributes": "*"
+        };
+
+        // Initialize a request to our built URL, making sure to set false as the 3rd parameter to make the request synchronous        
+        xmlhttp.open("POST", requestURL, false);
+
+        // Set headers for our request
+        xmlhttp.setRequestHeader('Authorization', 'Basic ' + this.getBasicAuthToken());
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+
+        xmlhttp.send(JSON.stringify(requestData));
+
+        // Retrieve response text and translate to JSON
+        xmlResponse = xmlhttp.responseText;
+        var jsonObject = JSON.parse(xmlResponse);    
+
+        var similarVideosXML = "";
+        var asset;
+        // Iterate through results and build out XML to be returned.
+        for (var i = 0; i < jsonObject.length; i++) {
+
+            asset = jsonObject[i];
+            
+            similarVideosXML += "                <lockup assetID='" + asset.id + "'>\n";
+            similarVideosXML += "                  <img src='" + asset.poster_url + "' width='134' height='197' style='border-radius: small;' /> \n";
+            similarVideosXML += "                  <title style='font-size: 24px;'>" + asset.title + "</title>\n";
+            similarVideosXML += "                </lockup>\n";
+        }
+
+        return similarVideosXML;
+    },    
+
+    getSCCXML: function() {
+        // Build out URL to send request to retrieve new releases
+        var requestURL = this.config.harperDBProtocol + "://" + this.config.harperDBHost + ":" + this.config.harperDBPort;
+
+        // Instantiate new XMLHttpRequest object for sending out our request
+        var xmlhttp = new XMLHttpRequest();
+
+        var requestData = {
+            "operation": "search_by_value",
+            "schema": "golftv_dev",
+            "table": "videos",
+            "hash_attribute": "id",
+            "search_attribute": "fk_category",
+            "search_value": "4",
+            "get_attributes": "*"
+        };
+
+        // Initialize a request to our built URL, making sure to set false as the 3rd parameter to make the request synchronous        
+        xmlhttp.open("POST", requestURL, false);
+
+        // Set headers for our request
+        xmlhttp.setRequestHeader('Authorization', 'Basic ' + this.getBasicAuthToken());
+        xmlhttp.setRequestHeader('Content-Type', 'application/json');
+
+        xmlhttp.send(JSON.stringify(requestData));
+
+        // Retrieve response text and translate to JSON
+        xmlResponse = xmlhttp.responseText;
+        var jsonObject = JSON.parse(xmlResponse);    
+
+        var sccXML = "";
+        var asset;
+        // Iterate through results and build out XML to be returned.
+        for (var i = 0; i < jsonObject.length; i++) {
+
+            asset = jsonObject[i];
+            
+            sccXML += "                <lockup assetID='" + asset.id + "'>\n";
+            sccXML += "                  <img src='" + asset.poster_url + "' width='134' height='197' style='border-radius: small;' /> \n";
+            sccXML += "                  <title style='font-size: 24px;'>" + asset.title + "</title>\n";
+            sccXML += "                </lockup>\n";
+        }
+
+        return sccXML;
+    },    
 
     getNewReleasesXML: function() {
         // Build out URL to send request to retrieve new releases
@@ -179,16 +272,9 @@ GolfTV.prototype = {
                 <header>
                     <title>More like this</title>
                 </header>
-                <section>
-                    <lockup assetID="1">
-                        <img src="https://vod.shaw.ca/v2/art/399077/399077_3550858_1_1.jpg/width:190/" width="190" height="250"/>
-                        <title>Paolo's Golf Swing</title>
-                    </lockup>
-                    <lockup assetID="2">
-                        <img src="https://vod.shaw.ca/v2/art/398829/398829_3547543_1_1.jpg/width:190/" width="190" height="250"/>
-                        <title>Chris' Golf Swing</title>
-                    </lockup>                                             
-                </section>
+                <section>`;
+        returnXML += GolfTV.getSimilarVideos(assetObject.fk_category);
+        returnXML += `</section>
             </shelf>
             </productTemplate>
         </document>`;        

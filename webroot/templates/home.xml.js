@@ -5,9 +5,6 @@ var Template = function(GolfTV) {
       <background>
         <img src="http://local.golf.tv:30080/demo/images/golf_background.jpg" />
       </background>    
-      <banner>
-        <heroImg src="http://local.golf.tv:30080/demo/images/golftv.png" width="140" height="140" />
-      </banner>   
       <collectionList>
         <shelf>
             <section>`;
@@ -24,6 +21,15 @@ var Template = function(GolfTV) {
     homeXML += `                                                                                             
             </section>
         </shelf>
+        <shelf>
+            <header>
+                <title>2017 Shaw Charity Classic</title>
+            </header>
+            <section>`;
+    homeXML += GolfTV.getSCCXML();
+    homeXML += `                                                                                             
+            </section>
+        </shelf>        
       </collectionList>
     </stackTemplate>
   </document>`;
