@@ -15,21 +15,15 @@ Site.prototype = {
         // Instantiate new XMLHttpRequest object for sending out our request
         var xmlhttp = new XMLHttpRequest();
 
-        var category_id = 4;
-
-        category_id = category_id.toString();
-
         var requestData = {
             "operation": "search_by_value",
             "schema": "golftv_dev",
             "table": "videos",
             "hash_attribute": "id",
-            "search_attribute": "fk_category",
-            "search_value": category_id,
+            "search_attribute": "id",
+            "search_value": "*",
             "get_attributes": "*"
         };
-
-        console.log(requestData);
 
         xmlhttp.open("POST", requestURL, false);
 

@@ -32,21 +32,6 @@ App.onLaunch = function(options) {
 	});
 };
 
-// var loadMenu = function(event) {
-// 	var ele = event.target;
-// 	var jsXML = ele.getAttribute("jsTemplate");
-
-// 	if (jsXML) {
-// 		resourceLoader.loadResource(baseURL + `templates/` + jsXML, function(resource) {
-// 			var doc = Presenter.makeDocument(resource);
-// 			var menuItemDocument = ele.parentNode.getFeature("MenuBarDocument");		
-// 			menuItemDocument.setDocument(doc, ele)	
-// 			doc.addEventListener("select", Presenter.load.bind(Presenter));
-// 			Presenter.pushDocument(doc);
-// 		})			
-// 	}
-// };
-
 var createAlert = function(title, description) {
 	var alertString = `<?xml version="1.0" encoding="UTF-8" ?>
 		<document>
