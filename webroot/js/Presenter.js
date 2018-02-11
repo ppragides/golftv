@@ -54,7 +54,7 @@ Presenter.prototype = {
   		var self = this,
       	ele = event.target,
       	videoURL = ele.getAttribute("videoURL");
-		var xmlToLoad = ele.getAttribute("jsTemplate");
+		var assetID = ele.getAttribute("assetID");
 		if(videoURL) {
 			var player = new Player();
 			var playlist = new Playlist();
@@ -65,8 +65,8 @@ Presenter.prototype = {
 			player.present();
 		}
 
-		if (xmlToLoad) {
-			resourceLoader.loadResource(this.config.baseURL + `templates/` + xmlToLoad, function(resource) {
+		if (assetID) {
+			resourceLoader.loadResource(this.config.baseURL + `templates/assetDetail.xml.js`, function(resource) {
 				var doc = Presenter.makeDocument(resource);
 				// var menuItemDocument = ele.parentNode.getFeature("MenuBarDocument");		
 				// menuItemDocument.setDocument(doc, ele)	

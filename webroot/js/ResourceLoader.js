@@ -1,6 +1,7 @@
 var self;
-var ResourceLoader = function(config) {
+var ResourceLoader = function(config, GolfTV) {
 	this.config = config;
+	this.GolfTV = GolfTV;
 	self = this;
 	return self;
 
@@ -27,8 +28,8 @@ ResourceLoader.prototype = {
 	loadResource: function(resource, callback) {
 		evaluateScripts([resource], function(success) {
 			if(success) {
-				var resource = Template.call(self);
-				callback.call(self, resource);
+				var resource = Template.call(this, this.GolfTV);
+				callback.call(this, resource);
 			} else {
 				var title = "Resource Loader Error",
 					description = `Error loading resource '${resource}'. \n\n Try again later.`,

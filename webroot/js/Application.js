@@ -17,7 +17,7 @@ App.onLaunch = function(options) {
 		if(success) {
             GolfTV = new GolfTV(GolfConfig.golftv);            
             Presenter = new Presenter(GolfConfig.presenter);
-			resourceLoader = new ResourceLoader(GolfConfig.resourceLoader);
+			resourceLoader = new ResourceLoader(GolfConfig.resourceLoader, GolfTV);
 			resourceLoader.loadResource(`${options.BASEURL}templates/menubar.xml.js`, function(resource) {
 				var doc = Presenter.makeDocument(resource);
 				doc.addEventListener("select", loadMenu.bind(Presenter));
